@@ -11,6 +11,7 @@ from django.core.management.base import NoArgsCommand
 from django.conf import settings
 
 import datetime
+from django.utils import timezone
 
 from cas_provider.models import ServiceTicket, LoginTicket
 
@@ -22,7 +23,7 @@ class Command(NoArgsCommand):
         tickets = ServiceTicket.objects.all()
         for ticket in tickets:
             expiration = datetime.timedelta(minutes=settings.CAS_TICKET_EXPIRATION)
-            if datetime.datetime.now() > ticket.created + expiration:
+            if timezone.now() > ticket.created + expiration:
                 print "Deleting %s..." % ticket.ticket
                 ticket.delete()
             else:
@@ -31,7 +32,7 @@ class Command(NoArgsCommand):
         print "Login tickets:"
         for ticket in tickets:
             expiration = datetime.timedelta(minutes=settings.CAS_TICKET_EXPIRATION)
-            if datetime.datetime.now() > ticket.created + expiration:
+            if timezone.now() > ticket.created + expiration:
                 print "Deleting %s..." % ticket.ticket
                 ticket.delete()
             else:
